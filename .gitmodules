@@ -1,0 +1,6 @@
+[submodule "第三方軟體/Linux 作業系統核心（穩定版）"]
+	path = 第三方軟體/Linux 作業系統核心（穩定版）
+	url = git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
+[submodule "第三方軟體/kernel_gcc_patch"]
+	path = 第三方軟體/kernel_gcc_patch
+	url = https://github.com/graysky2/kernel_gcc_patch.git
