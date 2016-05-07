@@ -89,7 +89,7 @@ main() {
 	cp "$linux_kernel_build_config_template" .config 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/build-kernel.log"
 	
 	printf "套用 Linux 作業系統核心建構設定修正……\n" | tee --append "$PROJECT_LOGS_DIRECTORY/build-kernel.log"
-	sed --inplace "s/CONFIG_DEBUG_INFO=y/CONFIG_DEBUG_INFO=n/g" .config 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/build-kernel.log"
+	sed --in-place "s/CONFIG_DEBUG_INFO=y/CONFIG_DEBUG_INFO=n/g" .config 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/build-kernel.log"
 	
   if [ ! -d "$workaround_safe_build_directory" ]; then
 		printf "Workarounding GNU Make bug, we'll create a new directory for building kernel.\n" | tee --append "$PROJECT_LOGS_DIRECTORY/build-kernel.log" 1>&2
