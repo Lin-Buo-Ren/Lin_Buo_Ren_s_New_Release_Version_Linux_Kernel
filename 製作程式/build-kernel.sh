@@ -67,11 +67,17 @@ main() {
 		clean_up
 		exit 1
   fi
+  xz --decompress "$PROJECT_THIRD_PARTY_PF_KERNEL_PATCH_DIRECTORY/$(basename ${pf_kernel_patch_download_link})"
   
   cd "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY"
   
   printf "套用 pf-kernel 修正……\n" | tee "$PROJECT_LOGS_DIRECTORY/build-kernel.log"
-  patch --strip=1 <"$PROJECT_THIRD_PARTY_PF_KERNEL_PATCH_DIRECTORY/$(basename ${pf_kernel_patch_download_link})" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/build-kernel.log"
+  if [ ! -e "$PROJECT_THIRD_PARTY_PF_KERNEL_PATCH_DIRECTORY/$(basename --suffix=.xz ${pf_kernel_patch_download_link})" ]; then
+		printf "錯誤： pf-kernel 修正檔案不存在！\n" | tee --append "$PROJECT_LOGS_DIRECTORY/build-kernel.log" 1>&2
+		clean_up
+		exit 1
+  fi
+  patch --strip=1 <"$PROJECT_THIRD_PARTY_PF_KERNEL_PATCH_DIRECTORY/$(basename  --suffix=.xz ${pf_kernel_patch_download_link})" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/build-kernel.log"
   
 	printf "複製 Linux 作業系統核心建構設定範本……\n" | tee --append "$PROJECT_LOGS_DIRECTORY/build-kernel.log"
 	if [ ! -e "$linux_kernel_build_config_template" ]; then
