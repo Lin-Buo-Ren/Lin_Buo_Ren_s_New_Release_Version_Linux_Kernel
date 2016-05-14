@@ -34,7 +34,7 @@ clean_up() {
 		rmdir "$workaround_safe_build_directory" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
 	fi
 	
-	cd "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+	cd "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY"
 	rm -rf build 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
 	# reset tracked files
 	git reset --hard 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
@@ -99,7 +99,7 @@ main() {
   printf "掛載 Linux 作業系統核心來源碼目錄到建構路徑……\n" | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
   pkexec mount --bind "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY" "$workaround_safe_build_directory" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
 
-  cd "$workaround_safe_build_directory" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+  cd "$workaround_safe_build_directory"
   mkdir build 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
   env DEBFULLNAME="$maintainer_name" DEBEMAIL="$maintainer_email_address" make --jobs=$(nproc) LOCALVERSION=-${maintainer_identifier_used_in_package_name} KDEB_PKGVERSION=$(make kernelversion)-${package_release_number} O=build bindeb-pkg  2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
   mv *.deb "$PROJECT_BUILD_ARTIFACT_DIRECTORY" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
