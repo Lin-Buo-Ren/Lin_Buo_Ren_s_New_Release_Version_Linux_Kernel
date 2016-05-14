@@ -1,6 +1,6 @@
 # 建構作業系統核心.configuration.source.sh - 建構作業系統核心的設定檔
 # 林博仁 <Buo.Ren.Lin@gmail.com> © 2016
-# 這個檔案會被 建構作業系統核心.sh `source` 進去
+# 這個檔案會被「建構作業系統核心.sh」 `source` 進去
 
 # 因為 Linux 作業系統核心的軟體建構系統 GNU Make 不支援含有空白的路徑故我們用 bind mount point 來當作建構路徑（會在執行時自動嘗試建立）
 readonly workaround_safe_build_directory="$HOME/Workarounds/Safe_build_directory_for_Buo_Ren_Linux_Kernel"
