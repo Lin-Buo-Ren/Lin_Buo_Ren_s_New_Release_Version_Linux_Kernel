@@ -50,6 +50,9 @@ clean_up() {
 # Defensive Bash Programming - main function, program entry point
 # http://www.kfirlavi.com/blog/2012/11/14/defensive-bash-programming/
 main() {
+	#Exit immediately if a pipeline , which may consist of a single simple command , a list , or a compound command returns a non-zero status.
+	set -e
+
 	# 預防程式先前被強制終止我們在開始之前多做一次清潔程序
 	clean_up
 
