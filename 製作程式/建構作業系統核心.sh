@@ -58,11 +58,47 @@ clean_up() {
 	return
 }
 
+process_commandline_arguments() {
+	# Defensive Bash Programming - Command line arguments
+	# http://www.kfirlavi.com/blog/2012/11/14/defensive-bash-programming/
+	local arguments=$@
+	for argument in $arguments do
+		local delimiter=" "
+		case "$argument" in
+			# 翻譯長版本選項為短版本選項
+			--help)
+				arguments="${arguments}-h "
+			;;
+			# pass anything else
+			*)
+				[[ "${argument:0:1}" == "-" ]] || delimiter="\""
+				arguments="${arguments}${delimiter}${argument}${delimiter} "
+			;;
+		esac
+	done
+
+	#Reset the positional parameters to the short options
+	eval set -- $args
+
+	while getopts "h" short_argument; do
+		case $short_argument in
+			h)
+				print_help_message
+				exit 0
+			;;
+		esac
+	done
+	return
+}
+
 # Defensive Bash Programming - main function, program entry point
 # http://www.kfirlavi.com/blog/2012/11/14/defensive-bash-programming/
 main() {
 	#Exit immediately if a pipeline , which may consist of a single simple command , a list , or a compound command returns a non-zero status.
 	set -e
+
+	# Still not sure it'll work, need review
+	# process_commandline_arguments(PROGRAM_ARGUMENT_ORIGINAL_LIST)
 
 	if [ $PROGRAM_ARGUMENT_ORIGINAL_NUMBER -eq 1 ] && [ $PROGRAM_ARGUMENT_ORIGINAL_LIST == "--help" ]; then
 		print_help_message
