@@ -8,11 +8,11 @@ readonly workaround_safe_build_directory="$HOME/Workarounds/Safe_build_directory
 # Linux 來源碼樹的版本，對應到 linux-stable 版本倉庫中的 v${stable_kernel_version_to_checkout} 標籤
 readonly stable_kernel_version_to_checkout="4.5"
 
-# pf-kernel 修正的下載路徑
-readonly pf_kernel_patch_download_link="https://pf.natalenko.name/sources/4.5/patch-4.5-pf3.xz"
+# pf-kernel 修正的下載網址
+readonly pf_kernel_patch_download_url="https://pf.natalenko.name/sources/4.5/patch-4.5-pf3.xz"
 
-# Linux 作業系統核心設定檔範本
-readonly linux_kernel_build_config_template="/boot/config-4.4.0-22-generic"
+# Linux 作業系統核心設定檔範本路徑
+readonly linux_kernel_build_config_template_path="/boot/config-4.4.0-22-generic"
 
 readonly maintainer_name="林博仁"
 readonly maintainer_email_address="Buo.Ren.Lin@gmail.com"
