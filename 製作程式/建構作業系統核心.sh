@@ -11,11 +11,11 @@
 # Defensive Bash Programming - not-overridable primitive definitions
 # http://www.kfirlavi.com/blog/2012/11/14/defensive-bash-programming/
 readonly PROGRAM_FILENAME="$(basename "$0")"
-readonly PROGRAM_DIRECTORY="$(realpath --no-symlinks "$(dirname "$0")")"
+readonly PROGRAM_DIRECTORY="$(realpath --strip "$(dirname "$0")")"
 readonly PROGRAM_ARGUMENT_ORIGINAL_LIST="$@"
 readonly PROGRAM_ARGUMENT_ORIGINAL_NUMBER=$#
 
-readonly PROJECT_ROOT_DIRECTORY="$(realpath --no-symlinks "$PROGRAM_DIRECTORY/..")"
+readonly PROJECT_ROOT_DIRECTORY="$(realpath --strip "$PROGRAM_DIRECTORY/..")"
 readonly PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY="$PROJECT_ROOT_DIRECTORY/第三方軟體/Linux 作業系統核心（穩定版）"
 readonly PROJECT_THIRD_PARTY_PF_KERNEL_PATCH_DIRECTORY="$PROJECT_ROOT_DIRECTORY/第三方軟體/pf-kernel"
 readonly PROJECT_LOGS_DIRECTORY="$PROJECT_ROOT_DIRECTORY/運行紀錄檔"
