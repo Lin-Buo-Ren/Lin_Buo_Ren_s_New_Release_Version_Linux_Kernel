@@ -47,13 +47,13 @@ clean_up() {
 # Defensive Bash Programming - main function, program entry point
 # http://www.kfirlavi.com/blog/2012/11/14/defensive-bash-programming/
 main() {
+	# 預防程式先前被強制終止我們在開始之前多做一次清潔程序
+	clean_up
+
 	# 更新 Git 子模組
 	git submodule init
 	git submodule update --force --depth 1
 	
-	# 預防程式先前被強制終止我們在開始之前多做一次清潔程序
-	clean_up
-
 	# 將來源碼切換到我們要用的版本
 	cd "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY"
 	git fetch --depth=1 origin "refs/tags/v${stable_kernel_version_to_checkout}:refs/tags/v${stable_kernel_version_to_checkout}" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
