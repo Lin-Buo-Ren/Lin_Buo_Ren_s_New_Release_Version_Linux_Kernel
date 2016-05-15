@@ -49,7 +49,7 @@ clean_up() {
 main() {
 	# 更新 Git 子模組
 	git submodule init
-	git submodule update
+	git submodule update --depth 1
 	
 	# 預防程式先前被強制終止我們在開始之前多做一次清潔程序
 	clean_up
