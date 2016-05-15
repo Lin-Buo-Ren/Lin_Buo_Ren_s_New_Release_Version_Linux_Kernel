@@ -44,6 +44,7 @@ clean_up() {
 		# checkout back to master branch
 		git checkout master 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
 	fi
+	return
 }
 
 # Defensive Bash Programming - main function, program entry point
