@@ -27,6 +27,17 @@ source "$PROJECT_SETTINGS_DIRECTORY/建構作業系統核心.configuration.sourc
 ######## File scope variable definitions ended ########
 
 ######## Program ########
+print_help_message(){
+	printf "## 用法 ##\n"
+	printf "\t$PROGRAM_FILENAME （作業系統核心變種）\n"
+	printf "\t\t建構作業系統核心變種的作業系統核心，如省略之預設將建構自動偵測最佳化核心\n"
+	printf "\t$PROGRAM_FILENAME --help\n"
+	printf "\t\t印出幫助訊息\n"
+	printf "\n"
+	printf "本程式不需要且不應該以 root 身份執行，但執行途中仍需要詢問密碼以完成部份不能用一般權限完成的工作（特別是 bind mount）。\n"
+	return
+}
+
 clean_up() {
 	if [ -d "$workaround_safe_build_directory" ]; then
 		printf "試圖卸載建構目錄……\n" | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
@@ -52,6 +63,11 @@ clean_up() {
 main() {
 	#Exit immediately if a pipeline , which may consist of a single simple command , a list , or a compound command returns a non-zero status.
 	set -e
+
+	if [ $PROGRAM_ARGUMENT_ORIGINAL_NUMBER -eq 1 ] && [ $PROGRAM_ARGUMENT_ORIGINAL_LIST == "--help" ]; then
+		print_help_message
+		exit 0
+	fi
 
 	# 預防程式先前被強制終止我們在開始之前多做一次清潔程序
 	clean_up
