@@ -95,10 +95,10 @@ main() {
 	cp "$linux_kernel_build_config_template_path" "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
 
   # 決定要建構的作業系統核心變種
-  if [ $# -eq 0 ]; then
+  if [ $PROGRAM_ARGUMENT_ORIGINAL_NUMBER -eq 0 ]; then
     kernel_variant="autodetected"
   else
-	kernel_variant="$1"
+		kernel_variant="$PROGRAM_ARGUMENT_ORIGINAL_LIST"
   fi
 
 	printf "套用 Linux 作業系統核心建構設定修正……\n" | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
