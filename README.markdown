@@ -4,6 +4,9 @@
 ## 智慧財產授權條款
 GNU GPL 第三版（不涵蓋 Linux 作業系統核心本身）
 
+## 下載軟體
+<https://mega.nz/#F!UgsWgQLI!eMmGkd5h_ikaPtuw1IXGUA>
+
 ## 專案開發狀態
 還在設計自動化建構程式中，目前只支援 pf-kernel 建構。
 
