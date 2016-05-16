@@ -205,6 +205,10 @@ main() {
 
   make O=build olddefconfig 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
   env DEBFULLNAME="$maintainer_name" DEBEMAIL="$maintainer_email_address" make --jobs=$(nproc) LOCALVERSION=-${maintainer_identifier_used_in_package_name}-${kernel_variant} KDEB_PKGVERSION=$(make kernelversion)-${package_release_number} O=build bindeb-pkg  2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+
+  # Leave build directory in order to unmount it
+  cd "$PROJECT_ROOT_DIRECTORY"
+
   mv *.deb "$PROJECT_BUILD_ARTIFACT_DIRECTORY" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
   
   clean_up
