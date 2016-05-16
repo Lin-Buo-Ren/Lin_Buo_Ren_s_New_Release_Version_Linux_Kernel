@@ -131,7 +131,7 @@ main() {
   
   #gpg --verify "$PROJECT_THIRD_PARTY_PF_KERNEL_PATCH_DIRECTORY/$pf_kernel_patch_filename.sig"
   
-  xz --decompress --keep "$PROJECT_THIRD_PARTY_PF_KERNEL_PATCH_DIRECTORY/$(basename ${pf_kernel_patch_download_url})"
+  xz --decompress --keep "$PROJECT_THIRD_PARTY_PF_KERNEL_PATCH_DIRECTORY/$(basename ${pf_kernel_patch_download_url})" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log" || true
   
   printf "套用 pf-kernel 修正……\n" | tee "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
   if [ ! -e "$PROJECT_THIRD_PARTY_PF_KERNEL_PATCH_DIRECTORY/$(basename --suffix=.xz ${pf_kernel_patch_download_url})" ]; then
