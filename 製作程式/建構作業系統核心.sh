@@ -27,6 +27,17 @@ source "$PROJECT_SETTINGS_DIRECTORY/建構作業系統核心.configuration.sourc
 ######## File scope variable definitions ended ########
 
 ######## Program ########
+print_help_message(){
+	printf "## 用法 ##\n"
+	printf "\t$PROGRAM_FILENAME （作業系統核心變種）\n"
+	printf "\t\t建構作業系統核心變種的作業系統核心，如省略之預設將建構自動偵測最佳化核心\n"
+	printf "\t$PROGRAM_FILENAME --help\n"
+	printf "\t\t印出幫助訊息\n"
+	printf "\n"
+	printf "本程式不需要且不應該以 root 身份執行，但執行途中仍需要詢問密碼以完成部份不能用一般權限完成的工作（特別是 bind mount）。\n"
+	return
+}
+
 clean_up() {
 	if [ -d "$workaround_safe_build_directory" ]; then
 		printf "試圖卸載建構目錄……\n" | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
@@ -34,26 +45,73 @@ clean_up() {
 		rmdir "$workaround_safe_build_directory" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
 	fi
 	
-	cd "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY"
-	rm -rf build 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-	# reset tracked files
-	git reset --hard 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-	# remove untracked files
-	git clean --force -d -x 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-	# checkout back to master branch
-	git checkout master 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+	if [ -f "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/.git" ]; then
+		cd "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY"
+		rm -rf build 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+		# reset tracked files
+		git reset --hard 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+		# remove untracked files
+		git clean --force -d -x 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+		# checkout back to master branch
+		git checkout master 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+	fi
+	return
+}
+
+process_commandline_arguments() {
+	# Defensive Bash Programming - Command line arguments
+	# http://www.kfirlavi.com/blog/2012/11/14/defensive-bash-programming/
+	local arguments=$@
+	for argument in $arguments do
+		local delimiter=" "
+		case "$argument" in
+			# 翻譯長版本選項為短版本選項
+			--help)
+				arguments="${arguments}-h "
+			;;
+			# pass anything else
+			*)
+				[[ "${argument:0:1}" == "-" ]] || delimiter="\""
+				arguments="${arguments}${delimiter}${argument}${delimiter} "
+			;;
+		esac
+	done
+
+	#Reset the positional parameters to the short options
+	eval set -- $args
+
+	while getopts "h" short_argument; do
+		case $short_argument in
+			h)
+				print_help_message
+				exit 0
+			;;
+		esac
+	done
+	return
 }
 
 # Defensive Bash Programming - main function, program entry point
 # http://www.kfirlavi.com/blog/2012/11/14/defensive-bash-programming/
 main() {
+	#Exit immediately if a pipeline , which may consist of a single simple command , a list , or a compound command returns a non-zero status.
+	set -e
+
+	# Still not sure it'll work, need review
+	# process_commandline_arguments(PROGRAM_ARGUMENT_ORIGINAL_LIST)
+
+	if [ $PROGRAM_ARGUMENT_ORIGINAL_NUMBER -eq 1 ] && [ $PROGRAM_ARGUMENT_ORIGINAL_LIST == "--help" ]; then
+		print_help_message
+		exit 0
+	fi
+
 	# 預防程式先前被強制終止我們在開始之前多做一次清潔程序
 	clean_up
 
 	# 更新 Git 子模組
 	git submodule init
 	git submodule update --force --depth 1
-	
+
 	# 將來源碼切換到我們要用的版本
 	cd "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY"
 	git fetch --depth=1 origin "refs/tags/v${stable_kernel_version_to_checkout}:refs/tags/v${stable_kernel_version_to_checkout}" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
