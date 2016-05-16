@@ -154,7 +154,7 @@ main() {
 
   # 決定要建構的作業系統核心變種
   if [ $PROGRAM_ARGUMENT_ORIGINAL_NUMBER -eq 0 ]; then
-    kernel_variant="autodetected"
+    kernel_variant="autodetected-optimized"
   else
 		kernel_variant="$PROGRAM_ARGUMENT_ORIGINAL_LIST"
   fi
@@ -166,7 +166,7 @@ main() {
   "generic")
     # 無事可作
     ;;
-  "autodetected")
+  "autodetected-optimized")
     "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --disable "CONFIG_GENERIC" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
     "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --enable "CONFIG_MNATIVE" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
     ;;
