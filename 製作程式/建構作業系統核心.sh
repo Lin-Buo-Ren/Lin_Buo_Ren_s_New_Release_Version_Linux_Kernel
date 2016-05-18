@@ -209,7 +209,7 @@ main() {
   # Leave build directory in order to unmount it
   cd "$PROJECT_ROOT_DIRECTORY"
 
-  mv *.deb "$PROJECT_BUILD_ARTIFACT_DIRECTORY" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+  mv "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY"/linux-*.deb "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY"/linux-*.changes "$PROJECT_BUILD_ARTIFACT_DIRECTORY" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
   
   clean_up
   
