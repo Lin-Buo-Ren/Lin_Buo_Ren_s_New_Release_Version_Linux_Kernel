@@ -38,6 +38,21 @@ print_help_message(){
 	return
 }
 
+print_about_message(){
+	printf "## 關於本軟體 ##\n"
+	printf "### 作者 ###\n"
+	printf "林博仁 <Buo.Ren.Lin@gmail.com>\n"
+	printf "\n"
+	printf "### 授權條款 ###\n"
+	printf "GNU GPLv3\n"
+	printf "\n"
+	printf "### 官方網站 ###\n"
+	printf "https://github.com/Lin-Buo-Ren/Lin_Buo_Ren_s_New_Release_Version_Linux_Kernel\n"
+	printf "\n"
+	printf "### 議題追蹤系統 ###\n"
+	printf "https://github.com/Lin-Buo-Ren/Lin_Buo_Ren_s_New_Release_Version_Linux_Kernel/issues\n"
+}
+
 clean_up() {
 	if [ -d "$workaround_safe_build_directory" ]; then
 		printf "試圖卸載建構目錄……\n" | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
@@ -72,6 +87,10 @@ process_commandline_arguments() {
 		case $argument in
 			--help)
 				arguments_translated="${arguments_translated}-h${argument_separater}"
+			;;
+			--about)
+				print_about_message
+				exit 0
 			;;
 			# pass anything else
 			*)
