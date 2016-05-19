@@ -62,24 +62,30 @@ clean_up() {
 process_commandline_arguments() {
 	# Defensive Bash Programming - Command line arguments
 	# http://www.kfirlavi.com/blog/2012/11/14/defensive-bash-programming/
-	local arguments=$@
-	for argument in $arguments do
-		local delimiter=" "
-		case "$argument" in
-			# 翻譯長版本選項為短版本選項
+	# 接 $PROGRAM_ARGUMENT_ORIGINAL_LIST
+	local arguments="$@"
+	
+	# 翻譯長版本選項為短版本選項
+	for argument in $arguments; do # $arguments 是有意不要被引號括住的，才會被 for 回圈一一走訪
+		local delimiter=""
+		local argument_separater=" "
+		case $argument in
 			--help)
-				arguments="${arguments}-h "
+				arguments_translated="${arguments_translated}-h${argument_separater}"
 			;;
 			# pass anything else
 			*)
+				# 如果參數不是「-」開頭（不是命令列選項）就將 $delimiter 改為「"」，不然的話維持「（空字串）」
+				# -e -> ${arguments_translated}-e${argument_separater}
+				# et -> ${arguments_translated}"et"${argument_separater}
 				[[ "${argument:0:1}" == "-" ]] || delimiter="\""
-				arguments="${arguments}${delimiter}${argument}${delimiter} "
+				arguments_translated="${arguments_translated}${delimiter}${argument}${delimiter}${argument_separater}"
 			;;
 		esac
 	done
 	
 	#Reset the positional parameters to the short options
-	eval set -- $args
+	eval set -- $arguments_translated
 	
 	while getopts "h" short_argument; do
 		case $short_argument in
@@ -98,13 +104,7 @@ main() {
 	#Exit immediately if a pipeline , which may consist of a single simple command , a list , or a compound command returns a non-zero status.
 	set -e
 	
-	# Still not sure it'll work, need review
-	# process_commandline_arguments(PROGRAM_ARGUMENT_ORIGINAL_LIST)
-	
-	if [ $PROGRAM_ARGUMENT_ORIGINAL_NUMBER -eq 1 ] && [ $PROGRAM_ARGUMENT_ORIGINAL_LIST == "--help" ]; then
-		print_help_message
-		exit 0
-	fi
+	process_commandline_arguments $PROGRAM_ARGUMENT_ORIGINAL_LIST
 	
 	# 預防程式先前被強制終止我們在開始之前多做一次清潔程序
 	clean_up
