@@ -46,6 +46,7 @@ clean_up() {
 	fi
 	
 	if [ -f "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/.git" ]; then
+		printf "資訊：切換當前工作目錄到 Linux 作業系統核心來源碼目錄。\n" | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
 		cd "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY"
 		rm -rf build 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
 		# reset tracked files
@@ -113,6 +114,7 @@ main() {
 	git submodule update --force --depth 1
 	
 	# 將來源碼切換到我們要用的版本
+	printf "資訊：切換當前工作目錄到 Linux 作業系統核心來源碼目錄。\n" | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
 	cd "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY"
 	git fetch --depth=1 origin "refs/tags/v${stable_kernel_version_to_checkout}:refs/tags/v${stable_kernel_version_to_checkout}" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
 	git checkout v${stable_kernel_version_to_checkout} 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
@@ -201,12 +203,14 @@ main() {
 	printf "掛載 Linux 作業系統核心來源碼目錄到建構路徑……\n" | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
 	pkexec mount --bind "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY" "$workaround_safe_build_directory" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
 	
+	printf "資訊：切換當前工作目錄到安全路徑建構目錄。\n" | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
 	cd "$workaround_safe_build_directory"
 	
 	make O=build olddefconfig 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
 	env DEBFULLNAME="$maintainer_name" DEBEMAIL="$maintainer_email_address" make --jobs=$(nproc) LOCALVERSION=-${maintainer_identifier_used_in_package_name}-${kernel_variant} KDEB_PKGVERSION=$(make kernelversion)-${package_release_number} O=build bindeb-pkg  2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
 	
 	# Leave build directory in order to unmount it
+	printf "資訊：切換當前工作目錄到專案根目錄。\n" | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
 	cd "$PROJECT_ROOT_DIRECTORY"
 	
 	mv "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY"/linux-*.deb "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY"/linux-*.changes "$PROJECT_BUILD_ARTIFACT_DIRECTORY" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
