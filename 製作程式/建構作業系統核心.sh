@@ -66,7 +66,7 @@ process_commandline_arguments() {
 	local arguments="$@"
 	
 	# 翻譯長版本選項為短版本選項
-	for argument in $arguments; do # $arguments 是有意不要被引號括住的，才會被 for 回圈一一走訪
+	for argument in $arguments; do # $arguments 是有意不要被引號括住的，才會被 for 迴圈一一走訪
 		local delimiter=""
 		local argument_separater=" "
 		case $argument in
