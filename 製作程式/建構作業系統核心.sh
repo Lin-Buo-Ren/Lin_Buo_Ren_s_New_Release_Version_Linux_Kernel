@@ -104,6 +104,8 @@ main() {
 	#Exit immediately if a pipeline , which may consist of a single simple command , a list , or a compound command returns a non-zero status.
 	set -e
 	
+	printf "# 林博仁的新釋出版本 Linux 作業系統核心建構程序 #\n" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
+	
 	process_commandline_arguments $PROGRAM_ARGUMENT_ORIGINAL_LIST
 	
 	# 預防程式先前被強制終止我們在開始之前多做一次清潔程序
