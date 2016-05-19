@@ -1,0 +1,2 @@
+[filter "enforce-project-coding-style"]
+	clean = 第三方軟體/Bash\\ Script\\ Beautifier/beautify_bash.py -
