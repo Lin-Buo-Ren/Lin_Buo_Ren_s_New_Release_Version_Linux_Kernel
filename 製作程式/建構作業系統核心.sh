@@ -76,10 +76,10 @@ process_commandline_arguments() {
 			;;
 		esac
 	done
-
+	
 	#Reset the positional parameters to the short options
 	eval set -- $args
-
+	
 	while getopts "h" short_argument; do
 		case $short_argument in
 			h)
@@ -96,51 +96,51 @@ process_commandline_arguments() {
 main() {
 	#Exit immediately if a pipeline , which may consist of a single simple command , a list , or a compound command returns a non-zero status.
 	set -e
-
+	
 	# Still not sure it'll work, need review
 	# process_commandline_arguments(PROGRAM_ARGUMENT_ORIGINAL_LIST)
-
+	
 	if [ $PROGRAM_ARGUMENT_ORIGINAL_NUMBER -eq 1 ] && [ $PROGRAM_ARGUMENT_ORIGINAL_LIST == "--help" ]; then
 		print_help_message
 		exit 0
 	fi
-
+	
 	# 預防程式先前被強制終止我們在開始之前多做一次清潔程序
 	clean_up
-
+	
 	# 更新 Git 子模組
 	git submodule init
 	git submodule update --force --depth 1
-
+	
 	# 將來源碼切換到我們要用的版本
 	cd "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY"
 	git fetch --depth=1 origin "refs/tags/v${stable_kernel_version_to_checkout}:refs/tags/v${stable_kernel_version_to_checkout}" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
 	git checkout v${stable_kernel_version_to_checkout} 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
 	
-  printf "下載 pf-kernel 修正……\n" | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-  wget --no-clobber --directory-prefix="$PROJECT_THIRD_PARTY_PF_KERNEL_PATCH_DIRECTORY" ${pf_kernel_patch_download_url} ${pf_kernel_patch_download_url}.sig 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-  if [ $? -ne 0 ]; then
+	printf "下載 pf-kernel 修正……\n" | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+	wget --no-clobber --directory-prefix="$PROJECT_THIRD_PARTY_PF_KERNEL_PATCH_DIRECTORY" ${pf_kernel_patch_download_url} ${pf_kernel_patch_download_url}.sig 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+	if [ $? -ne 0 ]; then
 		printf "錯誤：pf-kernel 修正下載失敗！\n" | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log" 1>&2
 		printf "請檢查設定檔中 pf_kernel_patch_download_url 設定值的路徑是否正確！\n" | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log" 1>&2
 		clean_up
 		exit 1
-  fi
-  
-  # 驗證資料完整性
-  readonly pf_kernel_patch_filename=$(basename ${pf_kernel_patch_download_url})
-  
-  #gpg --verify "$PROJECT_THIRD_PARTY_PF_KERNEL_PATCH_DIRECTORY/$pf_kernel_patch_filename.sig"
-  
-  xz --decompress --keep "$PROJECT_THIRD_PARTY_PF_KERNEL_PATCH_DIRECTORY/$(basename ${pf_kernel_patch_download_url})" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log" || true
-  
-  printf "套用 pf-kernel 修正……\n" | tee "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-  if [ ! -e "$PROJECT_THIRD_PARTY_PF_KERNEL_PATCH_DIRECTORY/$(basename --suffix=.xz ${pf_kernel_patch_download_url})" ]; then
+	fi
+	
+	# 驗證資料完整性
+	readonly pf_kernel_patch_filename=$(basename ${pf_kernel_patch_download_url})
+	
+	#gpg --verify "$PROJECT_THIRD_PARTY_PF_KERNEL_PATCH_DIRECTORY/$pf_kernel_patch_filename.sig"
+	
+	xz --decompress --keep "$PROJECT_THIRD_PARTY_PF_KERNEL_PATCH_DIRECTORY/$(basename ${pf_kernel_patch_download_url})" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log" || true
+	
+	printf "套用 pf-kernel 修正……\n" | tee "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+	if [ ! -e "$PROJECT_THIRD_PARTY_PF_KERNEL_PATCH_DIRECTORY/$(basename --suffix=.xz ${pf_kernel_patch_download_url})" ]; then
 		printf "錯誤： pf-kernel 修正檔案不存在！\n" | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log" 1>&2
 		clean_up
 		exit 1
-  fi
-  patch --strip=1 --directory="$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY" <"$PROJECT_THIRD_PARTY_PF_KERNEL_PATCH_DIRECTORY/$(basename  --suffix=.xz ${pf_kernel_patch_download_url})" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-  
+	fi
+	patch --strip=1 --directory="$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY" <"$PROJECT_THIRD_PARTY_PF_KERNEL_PATCH_DIRECTORY/$(basename  --suffix=.xz ${pf_kernel_patch_download_url})" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+	
 	printf "複製 Linux 作業系統核心建構設定範本……\n" | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
 	if [ ! -e "$linux_kernel_build_config_template_path" ]; then
 		printf "錯誤：Linux 作業系統核心建構設定範本檔案不存在！\n" | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log" 1>&2
@@ -151,68 +151,68 @@ main() {
 	
 	mkdir --parents "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build"
 	cp "$linux_kernel_build_config_template_path" "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-
-  # 決定要建構的作業系統核心變種
-  if [ $PROGRAM_ARGUMENT_ORIGINAL_NUMBER -eq 0 ]; then
-    kernel_variant="autodetected-optimized"
-  else
+	
+	# 決定要建構的作業系統核心變種
+	if [ $PROGRAM_ARGUMENT_ORIGINAL_NUMBER -eq 0 ]; then
+		kernel_variant="autodetected-optimized"
+	else
 		kernel_variant="$PROGRAM_ARGUMENT_ORIGINAL_LIST"
-  fi
-
+	fi
+	
 	printf "套用 Linux 作業系統核心建構設定修正……\n" | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
 	"$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --disable "CONFIG_DEBUG_INFO" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-
-  case $kernel_variant in
-  "generic")
-    # 無事可作
-    ;;
-  "autodetected-optimized")
-    "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --disable "CONFIG_GENERIC" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-    "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --enable "CONFIG_MNATIVE" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-    ;;
-  "intel-haswell-optimized")
-    "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --disable "CONFIG_GENERIC" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-    "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --enable "CONFIG_MHASWELL" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-    ;;
-  "intel-ivybridge-optimized")
-    "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --disable "CONFIG_GENERIC" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-    "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --enable "CONFIG_MIVYBRIDGE" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-    ;;
-  "intel-core2-optimized")
-    "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --disable "CONFIG_GENERIC" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-    "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --enable "CONFIG_MCORE2" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-    ;;
-  "intel-nehalem-optimized")
-    "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --disable "CONFIG_GENERIC" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-    "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --enable "CONFIG_MNEHALEM" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-    ;;
-  *)
-    printf "錯誤：作業系統核心變種無法辨識！\n" | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log" 1>&2 
-    clean_up
-    exit 1
-    ;;
-  esac
-
-  if [ ! -d "$workaround_safe_build_directory" ]; then
+	
+	case $kernel_variant in
+		"generic")
+			# 無事可作
+		;;
+		"autodetected-optimized")
+			"$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --disable "CONFIG_GENERIC" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+			"$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --enable "CONFIG_MNATIVE" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+		;;
+		"intel-haswell-optimized")
+			"$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --disable "CONFIG_GENERIC" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+			"$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --enable "CONFIG_MHASWELL" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+		;;
+		"intel-ivybridge-optimized")
+			"$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --disable "CONFIG_GENERIC" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+			"$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --enable "CONFIG_MIVYBRIDGE" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+		;;
+		"intel-core2-optimized")
+			"$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --disable "CONFIG_GENERIC" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+			"$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --enable "CONFIG_MCORE2" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+		;;
+		"intel-nehalem-optimized")
+			"$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --disable "CONFIG_GENERIC" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+			"$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/scripts/config" --file "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build/.config" --enable "CONFIG_MNEHALEM" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+		;;
+		*)
+			printf "錯誤：作業系統核心變種無法辨識！\n" | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log" 1>&2
+			clean_up
+			exit 1
+		;;
+	esac
+	
+	if [ ! -d "$workaround_safe_build_directory" ]; then
 		printf "Workarounding GNU Make bug, we'll create a new directory for building kernel.\n" | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log" 1>&2
 		mkdir --parents "$workaround_safe_build_directory" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-  fi
-  
-  printf "掛載 Linux 作業系統核心來源碼目錄到建構路徑……\n" | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-  pkexec mount --bind "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY" "$workaround_safe_build_directory" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-
-  cd "$workaround_safe_build_directory"
-
-  make O=build olddefconfig 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-  env DEBFULLNAME="$maintainer_name" DEBEMAIL="$maintainer_email_address" make --jobs=$(nproc) LOCALVERSION=-${maintainer_identifier_used_in_package_name}-${kernel_variant} KDEB_PKGVERSION=$(make kernelversion)-${package_release_number} O=build bindeb-pkg  2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-
-  # Leave build directory in order to unmount it
-  cd "$PROJECT_ROOT_DIRECTORY"
-
-  mv "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY"/linux-*.deb "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY"/linux-*.changes "$PROJECT_BUILD_ARTIFACT_DIRECTORY" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
-  
-  clean_up
-  
+	fi
+	
+	printf "掛載 Linux 作業系統核心來源碼目錄到建構路徑……\n" | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+	pkexec mount --bind "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY" "$workaround_safe_build_directory" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+	
+	cd "$workaround_safe_build_directory"
+	
+	make O=build olddefconfig 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+	env DEBFULLNAME="$maintainer_name" DEBEMAIL="$maintainer_email_address" make --jobs=$(nproc) LOCALVERSION=-${maintainer_identifier_used_in_package_name}-${kernel_variant} KDEB_PKGVERSION=$(make kernelversion)-${package_release_number} O=build bindeb-pkg  2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+	
+	# Leave build directory in order to unmount it
+	cd "$PROJECT_ROOT_DIRECTORY"
+	
+	mv "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY"/linux-*.deb "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY"/linux-*.changes "$PROJECT_BUILD_ARTIFACT_DIRECTORY" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/建構作業系統核心.log"
+	
+	clean_up
+	
 	## 正常結束 script 程式
 	exit 0
 }
