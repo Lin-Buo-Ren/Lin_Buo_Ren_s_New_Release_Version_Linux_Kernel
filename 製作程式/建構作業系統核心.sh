@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # 上列為宣告執行 script 程式用的殼程式(shell)的 shebang
 # 建構作業系統核心 - 作業系統核心建構程序
 # 林博仁 <Buo.Ren.Lin@gmail.com> © 2016
