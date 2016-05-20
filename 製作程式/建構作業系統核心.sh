@@ -145,7 +145,7 @@ main() {
 	git submodule init
 	git submodule update --force --depth 1
 	
-	# 將來源碼切換到我們要用的版本
+	# 將 Linux 作業系統核心來源碼切換到我們要用的版本
 	printf "資訊：切換當前工作目錄到 Linux 作業系統核心來源碼目錄。\n" | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
 	cd "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY"
 	git fetch --depth=1 origin "refs/tags/v${stable_kernel_version_to_checkout}:refs/tags/v${stable_kernel_version_to_checkout}" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
