@@ -14,3 +14,30 @@ GNU GPL 第三版（不涵蓋 Linux 作業系統核心本身）
 * realpath
 * Linux 作業系統核心的軟體建構依賴軟體
 
+## 用語說明
+### Base Version
+做為基底的 Linux 作業系統核心版本
+
+### Architecture
+相容的（最低）處理器指令集類別，例如：
+
+* autodetected-optimized（預設）
+	* 由 GCC 針對您的電腦自動偵測出來的設定
+* intel-haswell-optimized
+* intel-ivybridge-optimized
+* intel-core2-optimized
+* intel-nehalem-optimized
+* generic
+	* 採用 Ubuntu 作業系統核心的預設設定
+
+### Branch
+Linux 作業系統核心的分支，例如：
+
+* mainline/vanilla
+* pf（預設）
+* ubuntu
+
+### Feature
+Linux 作業系統核心啟用或停用的功能，例如：
+
+* non-pae
