@@ -54,6 +54,7 @@ print_about_message(){
 }
 
 clean_up() {
+	printf "資訊：清理資料中……\n" | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
 	if [ -d "$workaround_safe_build_directory" ]; then
 		printf "試圖卸載建構目錄……\n" | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
 		pkexec umount "$workaround_safe_build_directory" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
@@ -120,8 +121,17 @@ process_commandline_arguments() {
 # Defensive Bash Programming - main function, program entry point
 # http://www.kfirlavi.com/blog/2012/11/14/defensive-bash-programming/
 main() {
-	#Exit immediately if a pipeline , which may consist of a single simple command , a list , or a compound command returns a non-zero status.
+	# -e Exit immediately if a pipeline , which may consist of a single simple command , a list , or a compound command returns a non-zero status.
 	set -e
+	
+	# -E If set, any trap on `ERR' is inherited by shell functions,
+	# command substitutions, and commands executed in a subshell
+	# environment.  The `ERR' trap is normally not inherited in
+	# such cases.
+	set -E
+	
+	# 每當錯誤發生或程式被終止時清理資料
+	trap clean_up ERR SIGINT SIGTERM
 	
 	printf "# 林博仁的新釋出版本 Linux 作業系統核心建構程序 #\n" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
 	
