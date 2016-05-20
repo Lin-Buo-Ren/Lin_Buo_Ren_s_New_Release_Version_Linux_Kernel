@@ -15,12 +15,11 @@ readonly PROGRAM_DIRECTORY="$(realpath --strip "$(dirname "$0")")"
 readonly PROGRAM_ARGUMENT_ORIGINAL_LIST="$@"
 readonly PROGRAM_ARGUMENT_ORIGINAL_NUMBER=$#
 
-readonly PROJECT_ROOT_DIRECTORY="$(realpath --strip "$PROGRAM_DIRECTORY/..")"
-readonly PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY="$PROJECT_ROOT_DIRECTORY/第三方軟體/Linux 作業系統核心（穩定版）"
-readonly PROJECT_THIRD_PARTY_PF_KERNEL_PATCH_DIRECTORY="$PROJECT_ROOT_DIRECTORY/第三方軟體/pf-kernel"
-readonly PROJECT_LOGS_DIRECTORY="$PROJECT_ROOT_DIRECTORY/運行紀錄檔"
-readonly PROJECT_BUILD_ARTIFACT_DIRECTORY="$PROJECT_ROOT_DIRECTORY/建構產物"
-readonly PROJECT_SETTINGS_DIRECTORY="$PROJECT_ROOT_DIRECTORY/設定"
+# 將未定義的變數視為錯誤
+set -u
+
+# 專案路徑定義（$PROJECT_*）
+source "$PROGRAM_DIRECTORY/專案目錄設定.source.sh"
 
 source "$PROJECT_SETTINGS_DIRECTORY/建構作業系統核心.configuration.source.sh"
 
