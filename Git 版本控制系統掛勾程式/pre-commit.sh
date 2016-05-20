@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # 上列為宣告執行 script 程式用的殼程式(shell)的 shebang
-# 初始化開發環境.sh - 設定好要提交本專案程式碼時必須要有的開發環境
-# 林博仁 © 2016
-# 如題
+# precommit.sh - 提交版本前檢查程式
+# 林博仁 <Buo.Ren.Lin@gmail.com> © 2016
+# 這個程式會在提交版本前自動執行並檢查所有 bash script 的語法正確性
 
 ######## Included files ########
 
@@ -22,13 +22,13 @@ readonly PROGRAM_ARGUMENT_ORIGINAL_NUMBER=$#
 # Defensive Bash Programming - main function, program entry point
 # http://www.kfirlavi.com/blog/2012/11/14/defensive-bash-programming/
 main() {
-	# 安裝專案專用 Git 設定
-	# git - Is it possible to include a file in your .gitconfig - Stack Overflow
-	# http://stackoverflow.com/questions/1557183/is-it-possible-to-include-a-file-in-your-gitconfig
-	git config --local include.path '../.gitconfig'
-	
-	# 安裝版本提交前 Git 掛勾程式
-	ln --symbolic --force "../../Git 版本控制系統掛勾程式/pre-commit.sh" .git/hooks/pre-commit
+	printf "專案提交版本前掛勾程式：檢查 shell script 語法……\n"
+	find . -path './第三方軟體/Linux 作業系統核心（穩定版）' -prune -o -path './.git/*' -prune -o -name "*.sh" -print0 | xargs --null --max-args=1 bash -n
+	if [ $? -ne 0 ]; then
+		exit 1
+	else
+		printf "專案提交版本前掛勾程式：語法檢查完畢。\n"
+	fi
 	
 	## 正常結束 script 程式
 	exit 0
