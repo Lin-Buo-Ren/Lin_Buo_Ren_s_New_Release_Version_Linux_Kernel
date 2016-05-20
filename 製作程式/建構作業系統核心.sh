@@ -28,7 +28,7 @@ source "$PROJECT_SETTINGS_DIRECTORY/建構作業系統核心.configuration.sourc
 
 ######## Program ########
 print_help_message(){
-	printf "## 用法 ##\n"
+	printf "## 使用方法 ##\n"
 	printf "\t$PROGRAM_FILENAME （作業系統核心變種）\n"
 	printf "\t\t建構作業系統核心變種的作業系統核心，如省略之預設將建構自動偵測最佳化核心\n"
 	printf "\t$PROGRAM_FILENAME --help\n"
