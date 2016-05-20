@@ -32,6 +32,7 @@ print_help_message(){
 	printf "\t$PROGRAM_FILENAME （作業系統核心變種）\n"
 	printf "\t\t建構作業系統核心變種的作業系統核心，如省略之預設將建構自動偵測最佳化核心\n"
 	printf "\t$PROGRAM_FILENAME --help\n"
+	printf "\t$PROGRAM_FILENAME -h\n"
 	printf "\t\t印出幫助訊息\n"
 	printf "\n"
 	printf "本程式不需要且不應該以 root 身份執行，但執行途中仍需要詢問密碼以完成部份不能用一般權限完成的工作（特別是 bind mount）。\n"
