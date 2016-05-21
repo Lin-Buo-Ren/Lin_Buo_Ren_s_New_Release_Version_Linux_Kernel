@@ -89,8 +89,7 @@ clean_up() {
 process_commandline_arguments() {
 	# Defensive Bash Programming - Command line arguments
 	# http://www.kfirlavi.com/blog/2012/11/14/defensive-bash-programming/
-	# 接 $PROGRAM_ARGUMENT_ORIGINAL_LIST
-	local arguments="$@"
+	local arguments="$PROGRAM_ARGUMENT_ORIGINAL_LIST"
 	
 	# 翻譯長版本選項為短版本選項
 	for argument in $arguments; do # $arguments 是有意不要被引號括住的，才會被 for 迴圈一一走訪
@@ -146,7 +145,7 @@ main() {
 	
 	printf "# 林博仁的新釋出版本 Linux 作業系統核心建構程序 #\n" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
 	
-	process_commandline_arguments $PROGRAM_ARGUMENT_ORIGINAL_LIST
+	process_commandline_arguments
 	
 	# 預防程式先前被強制終止我們在開始之前多做一次清潔程序
 	clean_up
