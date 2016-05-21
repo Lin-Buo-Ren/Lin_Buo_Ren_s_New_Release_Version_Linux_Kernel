@@ -38,7 +38,6 @@ GNU GPL 第三版（不涵蓋 Linux 作業系統核心本身）
 * generic
 	* 採用 Ubuntu 作業系統核心的預設設定
 
-### CPU Mode(--cpu-mode)
 ### Branch
 Linux 作業系統核心的分支，例如：
 
