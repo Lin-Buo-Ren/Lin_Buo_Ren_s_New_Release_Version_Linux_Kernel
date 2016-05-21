@@ -105,6 +105,13 @@ process_commandline_arguments() {
 			;;
 			# pass anything else
 			*)
+				# 報錯所有不認識的長選項
+				if [ "${argument:0:2}" == "--" ]; then
+					printf "錯誤：$argument 命令列選項不存在！\n" | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log" 1>&2
+					printf "錯誤：請執行「$PROGRAM_FILENAME --help」命令以查詢所有可用的命令列選項。\n" | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log" 1>&2
+					exit 1
+				fi
+				
 				# 如果參數不是「-」開頭（不是命令列選項）就將 $delimiter 改為「"」，不然的話維持「（空字串）」
 				# -e -> ${arguments_translated}-e${argument_separater}
 				# et -> ${arguments_translated}"et"${argument_separater}
