@@ -29,7 +29,9 @@ source "$PROJECT_SETTINGS_DIRECTORY/建構作業系統核心.configuration.sourc
 ######## Program ########
 print_help_message(){
 	printf "## 使用方法 ##\n"
-	printf "\t$PROGRAM_FILENAME （作業系統核心變種）\n"
+	printf "請先參閱並設定「設定/建構作業系統核心.configuration.source.sh」設定檔\n"
+	printf "\n"
+	printf "\t$PROGRAM_FILENAME （--branch 〈Linux 作業系統核心的分支〉） （--architecture 〈相容的（最低）處理器指令集類別〉） （--feature 〈Linux 作業系統核心啟用或停用的功能〉）\n"
 	printf "\t\t建構作業系統核心變種的作業系統核心，如省略之預設將建構自動偵測最佳化核心\n"
 	printf "\t$PROGRAM_FILENAME --help\n"
 	printf "\t$PROGRAM_FILENAME -h\n"
@@ -52,6 +54,14 @@ print_about_message(){
 	printf "\n"
 	printf "### 議題追蹤系統 ###\n"
 	printf "https://github.com/Lin-Buo-Ren/Lin_Buo_Ren_s_New_Release_Version_Linux_Kernel/issues\n"
+}
+
+prepare_base_kernel(){
+	printf "資訊：切換當前工作目錄到 Linux 作業系統核心來源碼目錄。\n" | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
+	cd "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY"
+	git fetch --depth=1 origin "refs/tags/v${stable_kernel_version_to_checkout}:refs/tags/v${stable_kernel_version_to_checkout}" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
+	git checkout v${stable_kernel_version_to_checkout} 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
+	
 }
 
 clean_up() {
@@ -146,10 +156,7 @@ main() {
 	git submodule update --force --depth 1
 	
 	# 將 Linux 作業系統核心來源碼切換到我們要用的版本
-	printf "資訊：切換當前工作目錄到 Linux 作業系統核心來源碼目錄。\n" | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
-	cd "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY"
-	git fetch --depth=1 origin "refs/tags/v${stable_kernel_version_to_checkout}:refs/tags/v${stable_kernel_version_to_checkout}" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
-	git checkout v${stable_kernel_version_to_checkout} 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
+	prepare_base_kernel
 	
 	printf "下載 pf-kernel 修正……\n" | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
 	wget --no-clobber --directory-prefix="$PROJECT_THIRD_PARTY_PF_KERNEL_PATCH_DIRECTORY" ${pf_kernel_patch_download_url} ${pf_kernel_patch_download_url}.sig 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
