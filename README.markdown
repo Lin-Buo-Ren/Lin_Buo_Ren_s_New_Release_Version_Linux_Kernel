@@ -32,7 +32,11 @@ Linux 作業系統核心的分支，例如：
 主要的處理器指令集，例如：
 
 * x86
-* amd64
+* amd64（預設）
+* armv6
+* armv7
+* aarch64
+* powerpc
 
 ### CPU Architecture Compatibility(--cpu-architecture-compatibility)
 相容的（最低）處理器指令集類別，例如：
@@ -49,4 +53,5 @@ Linux 作業系統核心的分支，例如：
 ### Feature
 Linux 作業系統核心啟用或停用的功能，例如：
 
+* （無）（預設）
 * non-pae
