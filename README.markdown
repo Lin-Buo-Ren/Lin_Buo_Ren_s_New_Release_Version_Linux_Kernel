@@ -20,13 +20,19 @@ GNU GPL 第三版（不涵蓋 Linux 作業系統核心本身）
 ### Kernel Base Version(--kernel-base-version)
 做為基底的 Linux 作業系統核心版本
 
-### Branch(--kernel-branch)
+### Kernel Branch(--kernel-branch)
 Linux 作業系統核心的分支，例如：
 
 * mainline/vanilla
 	* 上游無修改版
 * pf（預設）
 * ubuntu
+
+### Kernel Feature(--kernel-feature)
+Linux 作業系統核心啟用或停用的功能，例如：
+
+* （無）（預設）
+* non-pae
 
 ### CPU Architecture(--cpu-architecture)
 主要的處理器指令集，例如：
@@ -49,9 +55,3 @@ Linux 作業系統核心的分支，例如：
 * intel-nehalem-optimized
 * generic
 	* 採用 Ubuntu 作業系統核心的預設設定
-
-### Feature
-Linux 作業系統核心啟用或停用的功能，例如：
-
-* （無）（預設）
-* non-pae
