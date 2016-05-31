@@ -32,13 +32,11 @@ if [ 0 -ne $? ]; then
 	set -e
 	prepare_base_kernel(){
 		# 更新 Git 子模組
-		git --git-dir="$PROJECT_ROOT_DIRECTORY/.git" submodule init
-		git --git-dir="$PROJECT_ROOT_DIRECTORY/.git" submodule update --force --depth 1 "$(realpath --relative-to="$PROJECT_ROOT_DIRECTORY" --strip "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY")"
+		git --git-dir="$PROJECT_ROOT_DIRECTORY/.git" --work-tree="$PROJECT_ROOT_DIRECTORY" submodule init
+		git --git-dir="$PROJECT_ROOT_DIRECTORY/.git" --work-tree="$PROJECT_ROOT_DIRECTORY" submodule update --force --depth 1 "$(realpath --relative-to="$PROJECT_ROOT_DIRECTORY" --strip "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY")"
 		
-		printf "資訊：切換當前工作目錄到 Linux 作業系統核心來源碼目錄。\n" | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
-		cd "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY"
-		git fetch --depth=1 origin "refs/tags/v${stable_kernel_version_to_checkout}:refs/tags/v${stable_kernel_version_to_checkout}" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
-		git checkout v${stable_kernel_version_to_checkout} 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
+		git --git-dir="$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/.git" --work-tree="$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY" fetch --depth=1 origin "refs/tags/v${stable_kernel_version_to_checkout}:refs/tags/v${stable_kernel_version_to_checkout}" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
+		git --git-dir="$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/.git" --work-tree="$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY" checkout v${stable_kernel_version_to_checkout} 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
 	}
 	declare -fr prepare_base_kernel
 fi

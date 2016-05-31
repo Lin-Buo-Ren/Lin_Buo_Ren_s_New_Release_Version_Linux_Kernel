@@ -41,10 +41,10 @@ if [ $? -ne 0 ]; then
 		# 函式參數 #
 		declare -r kernel_branch=$1
 		
-		git --git-dir="$PROJECT_ROOT_DIRECTORY/.git" submodule init 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
+		git --git-dir="$PROJECT_ROOT_DIRECTORY/.git" --work-tree="$PROJECT_ROOT_DIRECTORY" submodule init 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
 		printf "資訊：下載 kernel_gcc_patch 修正……\n" | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
-		git --git-dir="$PROJECT_ROOT_DIRECTORY/.git" submodule update --force "$(realpath --strip --relative-to="$PROJECT_ROOT_DIRECTORY" "$PROJECT_THIRD_PARTY_KERNEL_GCC_PATCH_DIRECTORY")" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
-		exit 0
+		git --git-dir="$PROJECT_ROOT_DIRECTORY/.git" --work-tree="$PROJECT_ROOT_DIRECTORY" submodule update --force "$(realpath --strip --relative-to="$PROJECT_ROOT_DIRECTORY" "$PROJECT_THIRD_PARTY_KERNEL_GCC_PATCH_DIRECTORY")" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
+		
 		case $kernel_branch in
 			mainline | vanilla)
 				printf "資訊：套用 kernel_gcc_patch 修正……\n" | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"

@@ -46,11 +46,11 @@ if [ $? -ne 0 ]; then
 		if [ -f "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/.git" ]; then
 			rm -rf "$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/build" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
 			# reset tracked files
-			git --git-dir="$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/.git" reset --hard 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
+			git --git-dir="$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/.git" --work-tree="$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY" reset --hard 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
 			# remove untracked files
-			git --git-dir="$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/.git" clean --force -d -x 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
+			git --git-dir="$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/.git" --work-tree="$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY" clean --force -d -x 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
 			# checkout back to master branch
-			git --git-dir="$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/.git" checkout master 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
+			git --git-dir="$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY/.git" --work-tree="$PROJECT_THIRD_PARTY_LINUX_SOURCE_DIRECTORY" checkout master 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
 		fi
 		return
 	}
