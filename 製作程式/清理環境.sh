@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # 上列為宣告執行 script 程式用的殼程式(shell)的 shebang
-# 〈程式檔名〉 - 〈程式描述文字（一言以蔽之）〉
-# 〈程式智慧財產權擁有者名諱、地址（選用）〉 © 〈智慧財產權生效年〉
-# 〈更多程式描述文字〉
+# 清理環境 - 清理建構環境
+# 林博仁 <Buo.Ren.Lin@gmail.com> © 2016
 
 ######## File scope variable definitions ########
 # Defensive Bash Programming - not-overridable primitive definitions
@@ -23,26 +22,17 @@ set -e
 # If set, the return value of a pipeline is the value of the last (rightmost) command to exit with a non-zero status, or zero if all commands in the pipeline exit successfully.
 set -o pipefail
 
-# 專案路徑定義（$PROJECT_*）
-source "$PROGRAM_DIRECTORY/專案目錄設定.source.sh"
-
-# 讀取軟體設定
-source "$PROJECT_SETTINGS_DIRECTORY/建構作業系統核心.configuration.source.sh"
-
 ######## File scope variable definitions ended ########
 
 ######## Included files ########
-source "$PROGRAM_DIRECTORY/處理命令列參數.function.source.sh"
-source "$PROGRAM_DIRECTORY/建構作業系統核心.function.source.sh"
+source "$PROGRAM_DIRECTORY/清理環境.function.source.sh"
 ######## Included files ended ########
 
 ######## Program ########
 # Defensive Bash Programming - main function, program entry point
 # http://www.kfirlavi.com/blog/2012/11/14/defensive-bash-programming/
 main() {
-	process_commandline_arguments
-	
-	build_kernel
+	clean_up
 	## 正常結束 script 程式
 	exit 0
 }
