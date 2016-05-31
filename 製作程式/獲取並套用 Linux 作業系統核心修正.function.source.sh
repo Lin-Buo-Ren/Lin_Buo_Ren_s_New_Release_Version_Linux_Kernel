@@ -31,7 +31,7 @@ source "$PROGRAM_DIRECTORY/支援的特色定義.source.sh"
 set +e
 declare -pF 2>/dev/null | grep --extended-regexp "^declare.* acquire_and_apply_patch$" &>/dev/null
 if [ $? -ne 0 ]; then
-	set -E
+	set -e
 	acquire_and_apply_patch() {
 		if [ $# -lt 1 ]; then
 			printf "錯誤：acquire_and_apply_patch()：參數不足！\n"
