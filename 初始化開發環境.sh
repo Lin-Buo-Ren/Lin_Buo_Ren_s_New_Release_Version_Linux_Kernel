@@ -12,7 +12,8 @@
 # Defensive Bash Programming - not-overridable primitive definitions
 # http://www.kfirlavi.com/blog/2012/11/14/defensive-bash-programming/
 readonly PROGRAM_FILENAME="$(basename "$0")"
-readonly PROGRAM_DIRECTORY="$(realpath --no-symlinks "$(dirname "$0")")"
+## 考慮向前相容 Ubuntu 14.04 LTS 將 --no-symlinks 替換為 --strip
+readonly PROGRAM_DIRECTORY="$(realpath --strip "$(dirname "$0")")"
 readonly PROGRAM_ARGUMENT_ORIGINAL_LIST="$@"
 readonly PROGRAM_ARGUMENT_ORIGINAL_NUMBER=$#
 
