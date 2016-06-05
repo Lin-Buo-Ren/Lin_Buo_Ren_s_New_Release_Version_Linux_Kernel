@@ -90,16 +90,16 @@ if [ 0 -ne $? ]; then
 					exit 0
 				;;
 				b)
-					readonly KERNEL_BRANCH="$OPTARG"
+					declare -gr KERNEL_BRANCH="$OPTARG"
 				;;
 				a)
-					declare -r CPU_ARCHITECTURE="$OPTARG"
+					declare -gr CPU_ARCHITECTURE="$OPTARG"
 				;;
 				c)
-					declare -r CPU_ARCHITECTURE_COMPATIBILITY="$OPTARG"
+					declare -gr CPU_ARCHITECTURE_COMPATIBILITY="$OPTARG"
 				;;
 				f)
-					declare -r KERNEL_FEATURE="$OPTARG"
+					declare -gr KERNEL_FEATURE="$OPTARG"
 				;;
 			esac
 		done
