@@ -116,15 +116,15 @@ if [ 0 -ne $? ]; then
 		# 如果參數未設定的話採用預設值
 		if [ ! -v KERNEL_BRANCH ]; then
 			printf "資訊：作業系統核心分支未設定，採用預設值 ${default_kernel_branch}。\n" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
-			readonly KERNEL_BRANCH=$default_kernel_branch
+			KERNEL_BRANCH=$default_kernel_branch
 		fi
 		if [ ! -v CPU_ARCHITECTURE ]; then
 			printf "資訊：主要的處理器指令集未設定，採用預設值 ${default_cpu_architecture}。\n" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
-			readonly CPU_ARCHITECTURE=$default_cpu_architecture
+			CPU_ARCHITECTURE=$default_cpu_architecture
 		fi
 		if [ ! -v CPU_ARCHITECTURE_COMPATIBILITY ]; then
 			printf "資訊：相容的（最低）處理器指令集類別未設定，採用預設值 ${default_cpu_architecture_compatibility}。\n" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
-			readonly CPU_ARCHITECTURE_COMPATIBILITY=$default_cpu_architecture_compatibility
+			CPU_ARCHITECTURE_COMPATIBILITY=$default_cpu_architecture_compatibility
 		fi
 		if [ ! -v KERNEL_FEATURE ]; then
 			if [ ! -z "$default_kernel_feature" ]; then
@@ -132,7 +132,7 @@ if [ 0 -ne $? ]; then
 			else
 				printf "資訊：Linux 作業系統核心啟用或停用的功能未設定，採用預設值。\n" 2>&1 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log"
 			fi
-			readonly KERNEL_FEATURE=$default_kernel_feature
+			KERNEL_FEATURE=$default_kernel_feature
 		fi
 		return
 	}
