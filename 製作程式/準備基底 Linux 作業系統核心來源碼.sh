@@ -19,6 +19,8 @@ set -u
 ######## Included files ########
 source "$PROGRAM_DIRECTORY/專案目錄設定.source.sh"
 source "$PROJECT_SETTINGS_DIRECTORY/建構作業系統核心.configuration.source.sh"
+# 通用變數宣告
+source "$PROGRAM_DIRECTORY/通用變數宣告.source.sh"
 
 source "$PROGRAM_DIRECTORY/準備基底 Linux 作業系統核心來源碼.function.source.sh"
 

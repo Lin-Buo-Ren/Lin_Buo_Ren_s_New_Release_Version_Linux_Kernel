@@ -27,6 +27,8 @@ set -o pipefail
 ######## Included files ########
 source "$PROGRAM_DIRECTORY/專案目錄設定.source.sh"
 source "$PROJECT_SETTINGS_DIRECTORY/建構作業系統核心.configuration.source.sh"
+# 通用變數宣告
+source "$PROGRAM_DIRECTORY/通用變數宣告.source.sh"
 
 source "$PROGRAM_DIRECTORY/處理命令列參數.function.source.sh"
 source "$PROGRAM_DIRECTORY/建立作業系統核心建構設定並套用建構設定修正.function.source.sh"

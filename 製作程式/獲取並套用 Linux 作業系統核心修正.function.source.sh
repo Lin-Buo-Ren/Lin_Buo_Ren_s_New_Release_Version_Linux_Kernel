@@ -16,10 +16,19 @@ set +e
 declare -p 2>/dev/null | grep --extended-regexp "^declare.* CONFIGURATION_LOADED(|=.*)$" &>/dev/null
 if [ 0 -ne $? ]; then
 	set -e
-	printf "錯誤：軟體設定未載入！\n" 1>&2
-	printf "錯誤：程式無法這樣繼續運行。\n" 1>&2
+	printf "錯誤：軟體設定未載入！\n" 1>&2 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log" 1>&2
+	printf "錯誤：程式無法這樣繼續運行。\n" 1>&2 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log" 1>&2
 	sleep 3
 	exit 1
+fi
+set -e
+
+set +e
+declare -p 2>/dev/null | grep --extended-regexp "^declare.* UNIVERSAL_VARIABLE_DECLARED(|=.*)$" &>/dev/null
+if [ $? -ne 0 ]; then
+	set -e
+	printf "錯誤：通用變數未宣告！\n" 1>&2 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log" 1>&2
+	printf "錯誤：程式無法這樣繼續運行。\n" 1>&2 | tee --append "$PROJECT_LOGS_DIRECTORY/$PROGRAM_FILENAME.log" 1>&2
 fi
 set -e
 
