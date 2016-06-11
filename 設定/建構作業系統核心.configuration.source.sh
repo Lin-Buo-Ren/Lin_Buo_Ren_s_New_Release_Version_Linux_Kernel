@@ -11,7 +11,7 @@ if [ 0 -ne $? ]; then
 	readonly maintainer_email_address="Buo.Ren.Lin@gmail.com"
 	readonly maintainer_identifier_used_in_package_name="buo-ren"
 	
-	readonly package_release_number="2"
+	readonly package_release_number="201606110231"
 	
 	# 因為 Linux 作業系統核心的軟體建構系統 GNU Make 不支援含有空白的路徑故我們用 bind mount point 來當作建構路徑（會在執行時自動嘗試建立）
 	readonly workaround_safe_build_directory="$HOME/Workarounds/Safe_build_directory_for_Buo_Ren_Linux_Kernel"
